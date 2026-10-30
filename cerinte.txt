@@ -1,0 +1,8 @@
+Lista de proiecte de facut in registri pentru training pe Arduino:
+1. Aprinderea si stingerea secventiala a 3 LED-uri folosind porturile I/O (Capitolul 13) - Folosind 3 leduri, codul trebuie sa porneasca/opreasca cele 3 leduri, in ordinea asta:stins, stins, stins; aprins, stins, stins; aprins, aprins, stins; aprins, aprins, aprins; apoi sa o ia de la capat dupa un scurt delay.
+2. Citirea starii unui singur buton si alternarea aprinderii a doua LED-uri folosind porturile I/O (Capitolul 13) - Folosind un buton si doua leduri noi, citeste starea butonului si alterneaza care din leduri sa fie aprins la apasarea sa. La inceput, ledurile sa fie in ordinea: aprins, stins; la apasare sa se inverseze in stins, aprins; la inca o apasare sa o ia de la capat.
+3. Citirea schimbarii starii unui buton cu ajutorul unei intreruperi (Capitolul 12) si aprinderea unui singur LED folosind porturile I/O (Capitolul 13)
+4. Folosirea unui timer pentru a masura o perioada exacta de timp de 0.25 secunde (Capitolul 14,15,16) si a aprinde/stinge secvential 3 LED-uri (refolosire leduri pct 1) la fiecare 0.25 secunde (Capitolul 13)
+5. Folosirea unui timer pentru a genera un semnal PWM de 1kHz cu un duty cycle schimbat intr-o bucla de la 0 la 100% si inapoi (Capitolul 15,16) pentru a aprinde si a stinge un LED gradual.
+6. Citirea unui potentiometru cu un ADC si afisarea pozitiei sale prin PWM pe un led
+7. Folosirea unui driver de afisaje cu 7 segmente prin I2C (Capitolul 21) pentru a afisa tensiunea de la un potentiometru.
