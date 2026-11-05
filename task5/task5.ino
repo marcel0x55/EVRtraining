@@ -1,9 +1,10 @@
+uint8_t dir = 1;
 
 void setup() {
   DDRB |= (1 << DDB1) | (1 << DDB2);    //pinii 9 si 10 output pentru pwm
 
   TCCR1A = 0;
-  TTCR1B = 0;
+  TCCR1B = 0;
   TCNT1 = 0;                            //resetam registrii de control pentru timer1
 
   TCCR1A = (1 << COM1A1) | (1 << COM1B1) | (1 << WGM11);
@@ -18,9 +19,17 @@ void setup() {
 }
 
 void loop() {
-  OCR1A++;
-  for (uint32_t volatile i = 0; i < 10000; i++); //mic delei
+  if (dir){
+    OCR1A++;
+  }else {
+    OCR1A--;
+  }                   //crestem sau scadem duty cycle in functie de directie
+  
+  for (uint32_t volatile i = 0; i < 1000; i++); //mic delei
+  
   if (OCR1A == 1999){
-    OCR1A = 0;        //resetam duty cycle la 0% cand ajunge la 100%
+    dir = !dir;       //inversam directia
+  }else if (OCR1A == 0){
+    dir = !dir;       //inversam directia
   }
 }
