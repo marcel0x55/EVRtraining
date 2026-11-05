@@ -1,11 +1,11 @@
 //goofy implementation cu wdt
 
 ISR(WDT_vect){      //intrerupere de la watchdog timer
+  PORTD = (PORTD << 1) | 0b00000001;
+  
   if ((PIND & ((1 << PIND2) | (1 << PIND3) | (1 << PIND4))) == 0b00011100){
     PORTD = 0;
-    return;
   }
-  PORTD = (PORTD << 1) | 0b00000001;
 }
 
 void setup() {
