@@ -15,8 +15,9 @@ ISR(PCINT0_vect){   //interrupt on change pentru Task 3
 ISR(WDT_vect){      //intrerupere de la watchdog timer pentru Task 4
   if (leds & LED_MASK == LED_MASK){         //if leds == 0b00011100
     leds = 0;
+  }else {
+    leds = (leds << 1) | (1 << PIND2);
   }
-  leds = (leds << 1) | (1 << PIND1);
 
   PORTD = (PORTD & ~LED_MASK) | (leds & LED_MASK);    //schimba starea ledurilor lasand ceilalti
                                                       //pini din PORTD neschimbati
@@ -54,7 +55,6 @@ void setup() {
   //iar timer0 si timer2 sunt de 8 biti asa ca nu putem scoate exact 0.25s si trebuie sa
   //numaram intreruperi
   //avand in vedere ca nu folosim wdt il putem folosi pentru a numara 0.25s
-  //TODO ar fi bine sa fie pus intro functie pentru a integra toate taskurile
   cli();                                              //dezactivam intreruperile cat lucram la wdt
   MCUSR &= ~(1 << WDRF);                              //ca sa ne asiguram ca putem scrie in wdtcsr
   WDTCSR |= (1 << WDCE) | (1 << WDE);                 //ca sa putem schimba configuratia wdt
@@ -83,7 +83,7 @@ void setup() {
 
   //setup Task 6
   //pentru PWM deja facut la setup Task 5
-  //setup ADC     TODO: refactor in functie
+  //setup ADC     TODO: muta pinul pe A1
   ADMUX = (1 << REFS0) | (1 << MUX0) | (1 << MUX2);   //MUX = 0101 adica pinul A5
                                                       //pe care avem potentiometrul
                                                       //REFS = 01 adica folosim VCC ca referinta

@@ -44,6 +44,18 @@ void setup() {
 
   i2c_start();
   i2c_write((AS1115_ADDR << 1) | 0);    //Trimitem adresa pe 7 biti + write bit 0
+  i2c_write(0x0B);                      //0x0B = scan limit register
+  i2c_write(0x03);                      //Activam digit 0-3
+  i2c_stop();
+  
+  //i2c_start();
+  //i2c_write((AS1115_ADDR << 1) | 0);    //Trimitem adresa pe 7 biti + write bit 0
+  //i2c_write(0x0E);                      //0x0E = feature register (its already good from the
+  //i2c_write(0x03);                      //start actually
+  //i2c_stop();
+  
+  i2c_start();
+  i2c_write((AS1115_ADDR << 1) | 0);    //Trimitem adresa pe 7 biti + write bit 0
   i2c_write(0x0A);                      //0x0A = brightness register
   i2c_write(0x0F);                      //max brightness
   i2c_stop();
@@ -52,6 +64,7 @@ void setup() {
   i2c_write((AS1115_ADDR << 1) | 0);    //Trimitem adresa pe 7 biti + write bit 0
   i2c_write(0x09);                      //0x09 = decode mode register
   i2c_write(0x0F);                      //pornim decode pentru toate 4 digits
+  i2c_stop();
   //un pic de cheating cu decode mode ca sa trimitem cifra direct sa nu trebuiasca sa transformam
   //in masca
   
@@ -80,18 +93,19 @@ void loop() {
 
   i2c_start();
   i2c_write((AS1115_ADDR << 1) | 0);    //Trimitem adresa pe 7 biti + write bit 0
-  
   i2c_write(0x01);                      //primul digit
-
+  
   //trimitem cifrele cu auto increment (nu e necesar sa trimitem stop command dupa fiecare si
   //sa mutam digit register
   i2c_write(d0m);
   i2c_write(d1s);
   i2c_write(d2z);
   i2c_write(d3u | 0x80);              //0x80 -> pune decimal point 
-
+  
   i2c_stop();
 
   while (ADCSRA & (1 << ADSC));         //asteptam sa se termine conversia (cleared in hardware)
                                         //facem asta la sfarsit ca sa nu asteptam prea mult
 }
+
+// de la margine VDD SCL SDA GND
