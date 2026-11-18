@@ -4,10 +4,11 @@ volatile uint8_t leds = 0;
 const uint8_t LED_MASK = (1 << PIND2) | (1 << PIND3) | (1 << PIND4);
 
 ISR(WDT_vect){      //intrerupere de la watchdog timer
-  if (leds & LED_MASK == LED_MASK){         //if leds == 0b00011100
+  if (leds == 0b00011100){         //if leds == 0b00011100
     leds = 0;
+  }else {
+    leds = (leds << 1) | (1 << PIND2);
   }
-  leds = (leds << 1) | (1 << PIND1);
 
   PORTD = (PORTD & ~LED_MASK) | (leds & LED_MASK);    //schimba starea ledurilor lasand ceilalti
                                                       //pini din PORTD neschimbati
