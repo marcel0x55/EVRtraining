@@ -20,7 +20,7 @@ void setup() {
   OCR1B = 0;                            //Duty cycle 0% pe pin 10
                 
   //setup ADC     TODO: refactor in functie
-  ADMUX = (1 << REFS0) | (1 << MUX0) | (1 << MUX2);   //MUX = 0101 adica pinul A5 
+  ADMUX = (1 << REFS0) | (1 << MUX0);                 //MUX = 0001 adica pinul A1
                                                       //pe care avem potentiometrul
                                                       //REFS = 01 adica folosim VCC ca referinta
                                                       //ADLAR = 0 adica aliniere default 
