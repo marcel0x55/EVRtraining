@@ -1,4 +1,5 @@
-#define AS1115_ADDR 0x00 //adresa i2c default
+#define AS1115_ADDR 0x00  //adresa i2c default
+#define FILTER_SHIFT 5    //averaging 32 samples
 
 void i2c_start(void){   //generam un start condition
   TWCR = (1 << TWINT) | (1 << TWSTA) | (1 << TWEN); //clear twint pentru a trimite (write 1 to 
@@ -29,11 +30,29 @@ void i2c_write(uint8_t data){
 //in acest caz nu avem nevoie de functii de read pentru i2c pentru ca in cazul driverului AS1115
 //doar trimitem
 
+uint16_t EMAfilter(void){
+  static uint32_t acc = 0;
+  static bool first = true;
+
+  uint16_t adcrd = ADC;
+
+  if (first){
+    acc = (uint32_t)adcrd << FILTER_SHIFT;
+    first = false;
+  }
+
+  acc = acc - (acc >> FILTER_SHIFT) + adcrd;
+
+  return (uint16_t)(acc >> FILTER_SHIFT);
+}
+
 void setup() {
   //i2c setup
-  TWSR = 0x00;        //prescaler = 1 (TWPS1 = 00)
-  TWBR = 72;          //(16MHz / (16 + 2 * TWBR * prescaler)) = 100kHz -> 16MHz/(16 + 2 * 72 * 1)
-  TWCR = (1 << TWEN); //pornim two wire peripheral
+  TWSR |= (1 << TWPS1);        
+  TWSR |= (1 << TWPS0);         //prescaler = 64 (TWPS1 = 11)
+  TWBR = 125;                   //(16MHz / (16 + 2 * TWBR * prescaler)) = 1kHz -> 
+                                //16MHz/(16 + 2 * 125 * 64) ultra slow pentru unreliable wiring
+  TWCR = (1 << TWEN);           //pornim two wire peripheral
                       
   //initializarea AS1115
   i2c_start();
@@ -69,7 +88,7 @@ void setup() {
   //in masca
   
   //setup ADC
-  ADMUX = (1 << REFS0) | (1 << MUX0) | (1 << MUX2);   //MUX = 0101 adica pinul A5
+  ADMUX = (1 << REFS0) | (1 << MUX0);                 //MUX = 0001 adica pinul A1
                                                       //pe care avem potentiometrul
                                                       //REFS = 01 adica folosim VCC ca referinta
                                                       //ADLAR = 0 adica aliniere default
@@ -82,7 +101,7 @@ void setup() {
 void loop() {
   ADCSRA |= (1 << ADSC);          //initiem o conversie ADC
 
-  uint16_t adcval = ADC;
+  uint16_t adcval = EMAfilter();
   uint16_t mv = ((uint32_t)adcval * 5000) / 1024;     //scalam valoarea din adc 0-1023 in
                                                       //milivolti 0-5000 (trebuie cast la uint32
                                                       //ca sa nu dea overflow cand inmultim
