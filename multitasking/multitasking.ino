@@ -13,7 +13,7 @@ ISR(PCINT0_vect){   //interrupt on change pentru Task 3
 }
 
 ISR(WDT_vect){      //intrerupere de la watchdog timer pentru Task 4
-  if (leds & LED_MASK == LED_MASK){         //if leds == 0b00011100
+  if (leds == 0b00011100){         //if leds == 0b00011100
     leds = 0;
   }else {
     leds = (leds << 1) | (1 << PIND2);
@@ -84,7 +84,7 @@ void setup() {
   //setup Task 6
   //pentru PWM deja facut la setup Task 5
   //setup ADC     TODO: muta pinul pe A1
-  ADMUX = (1 << REFS0) | (1 << MUX0) | (1 << MUX2);   //MUX = 0101 adica pinul A5
+  ADMUX = (1 << REFS0) | (1 << MUX0);                 //MUX = 0001 adica pinul A1
                                                       //pe care avem potentiometrul
                                                       //REFS = 01 adica folosim VCC ca referinta
                                                       //ADLAR = 0 adica aliniere default
